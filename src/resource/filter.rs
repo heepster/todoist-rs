@@ -1,6 +1,4 @@
-use types::*;
-use command;
-use uuid::Uuid;
+use crate::{ID, Color, command};
 
 #[derive(Serialize, Deserialize, Default, Debug, Clone)]
 #[serde(default)]

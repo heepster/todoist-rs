@@ -1,8 +1,7 @@
-//! Project related structures
-use types::*;
 use uuid::Uuid;
 
-use command;
+use crate::command;
+use crate::types::*;
 
 #[derive(Deserialize, Serialize, Default, Debug, Clone)]
 #[serde(default)]

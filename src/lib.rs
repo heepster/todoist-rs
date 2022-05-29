@@ -1,9 +1,8 @@
-extern crate serde;
 extern crate reqwest;
 extern crate uuid;
 extern crate chrono;
-extern crate serde_json;
 
+#[macro_use] extern crate serde;
 
 pub mod command;
 pub mod cache;
@@ -18,8 +17,10 @@ pub use cache::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::error::Error;
+use serde::Deserialize;
 
-#[macro_use] extern crate serde_derive;
+
+//#[macro_use] extern crate serde_derive;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Resource {
@@ -84,7 +85,7 @@ pub struct CommandError {
 pub enum CommandStatus {
     Ok(String),
     Error(CommandError),
-} 
+}
 
 #[derive(Serialize, Deserialize, Default, Debug)]
 #[serde(default)]
@@ -96,7 +97,7 @@ pub struct CommandResponse {
 #[derive(Default, Debug)]
 pub struct CommandErrors {
     errors        : HashMap<uuid::Uuid, CommandError>,
-    command_count : usize, 
+    command_count : usize,
 }
 
 
@@ -123,8 +124,8 @@ pub struct Client {
 }
 
 /// A transactions is a batch of commands that can be sent to Todoist in a single request
-/// 
-/// A transaction can be initiated with Client::begin(), to update the 
+///
+/// A transaction can be initiated with Client::begin(), to update the
 pub struct Transaction<'a> {
     commands: Vec<command::Command>,
     client: &'a mut Client,
@@ -140,8 +141,8 @@ impl<'a> Transaction<'a> {
         self
     }
 
-    pub fn commit(self) -> Result<CommandResponse, types::Error> {
-        self.client.send(self.commands.as_slice())
+    pub async fn commit(self) -> Result<CommandResponse, types::Error> {
+        self.client.send(self.commands.as_slice()).await
     }
 }
 
@@ -156,27 +157,44 @@ impl<'a> Client {
     }
 
     /// Request resources from todoist
-    pub fn sync(&self, sync_token: &str, what: &[ResourceType]) -> Result<SyncResponse, types::Error> {
-        let res : SyncResponse = self.client.post("http://todoist.com/api/v7/sync")
-            .form(&[("token",       self.token.as_str()), 
+    pub async fn sync(&self, sync_token: &str, what: &[ResourceType]) -> Result<SyncResponse, types::Error> {
+        println!("Making sync request");
+        let res = self.client.post("http://todoist.com/api/v8/sync")
+            .form(&[("token",       self.token.as_str()),
                     ("sync_token",  sync_token),
                     ("resource_types", &serde_json::to_string(what)?)])
-            .send()?
-            .json()?;
-        Ok(res)
+            .send()
+            .await?;
+
+        println!("{:?}", res.text().await?);
+
+        //let json_res = res
+        //    .json::<SyncResponse>()
+        //    .await
+        //    .expect("Test");
+
+        //if json_res.is_err() {
+        //    println!("{:?}", json_res.err().);
+        //}
+
+        //println!("{:?}", json_res);
+        return Ok(
+            SyncResponse::default()
+        );
     }
 
     /// Send a series of commands to todoist
-    /// 
+    ///
     /// It is generally prettier and safer to use a transaction, instead of this command.
     /// See Client::begin()
-    pub fn send(&mut self, cmd: &[command::Command]) -> Result<CommandResponse, types::Error> {
-        println!("{}", serde_json::to_string(cmd)?);
-        let res : CommandResponse = self.client.post("http://todoist.com/api/v7/sync")
-            .form(&[("token", self.token.clone()), 
+    pub async fn send(&mut self, cmd: &[command::Command]) -> Result<CommandResponse, types::Error> {
+        let res: CommandResponse = self.client.post("http://todoist.com/api/v8/sync")
+            .form(&[("token", self.token.clone()),
                     ("commands", serde_json::to_string(cmd)?)])
-            .send()?
-            .json()?;
+            .send()
+            .await?
+            .json()
+            .await?;
         CommandErrors::check_response(&res)?;
         Ok(res)
     }
@@ -196,7 +214,7 @@ impl CommandErrors {
         let errs = CommandErrors {
             command_count: resp.sync_status.len(),
             errors: resp.sync_status.iter()
-                .filter(|(_, y)| 
+                .filter(|(_, y)|
                     match y {
                         CommandStatus::Ok(_) => false,
                         CommandStatus::Error(_) => true,

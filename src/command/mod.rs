@@ -1,10 +1,11 @@
 use uuid::Uuid;
-use types::ID;
+use serde::{Serialize, Deserialize};
+
 #[macro_use] mod macros;
 
 pub mod filter {
-    use types::{Color, ID};
-    
+    use crate::{Color, ID};
+
     command! {
         pub struct Add {
             name  : String,
@@ -30,8 +31,9 @@ pub mod filter {
 }
 
 pub mod item {
-    use types::*;
     use std::collections::HashMap;
+
+    use crate::{ID, Language, Date, Priority};
 
     command! {
         pub struct Add {
@@ -85,7 +87,7 @@ pub mod item {
 }
 
 pub mod label {
-    use types::*;
+    use crate::{Color, ID};
 
     command! {
         pub struct Add {
@@ -111,8 +113,7 @@ pub mod label {
 }
 
 pub mod note {
-    use types::*;
-    use resource::Attachment;
+    use crate::{ID, Attachment};
 
     command! {
         pub struct Add {
@@ -137,7 +138,7 @@ pub mod note {
 }
 
 pub mod project {
-    use types::*;
+    use crate::{Color, ID};
 
     command! {
         pub struct Add {
@@ -196,5 +197,5 @@ pub struct Command {
     #[serde(flatten)]
     pub args    : CommandArgs,
     pub uuid    : Uuid,
-    pub temp_id : Option<Uuid>, 
+    pub temp_id : Option<Uuid>,
 }

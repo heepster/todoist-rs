@@ -1,4 +1,4 @@
-use types::*;
+use crate::types::*;
 use super::NotificationService;
 
 #[derive(Serialize, Deserialize, Default, Debug)]
@@ -49,7 +49,7 @@ pub struct User {
     /// the first day of the week, between 1 and 7
     pub start_day : isize,
 
-    /// the day of next week that tasks will be postponed to 
+    /// the day of next week that tasks will be postponed to
     pub next_week : isize,
 
     /// the format for time, 24h or 12h

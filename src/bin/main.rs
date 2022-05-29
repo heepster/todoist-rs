@@ -1,9 +1,8 @@
-extern crate serde_derive;
-extern crate xdg;
-extern crate todoist;
-extern crate clap;
-extern crate serde_json;
-extern crate serde;
+//extern crate xdg;
+//extern crate todoist;
+//extern crate clap;
+//extern crate serde_json;
+//extern crate serde;
 
 
 use std::io::{self, BufRead, Write};
@@ -12,6 +11,9 @@ use std::ffi::OsStr;
 use std::fs;
 use std::fmt;
 
+#[macro_use] extern crate serde;
+#[macro_use] extern crate serde_json;
+
 use clap::{App, Arg, SubCommand};
 /// Ask the user a question.
 ///
@@ -19,10 +21,10 @@ use clap::{App, Arg, SubCommand};
 pub fn query(format: fmt::Arguments) -> Result<String, io::Error> {
     let stdin  = io::stdin();
     let stdout = io::stdout();
-    
+
     stdout.lock().write_fmt(format)?;
     stdout.lock().flush()?;
-    
+
     let line = stdin.lock()
         .lines()
         .next()
@@ -67,7 +69,8 @@ macro_rules! query {
 }
 
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let matches = App::new("todoist")
                         .author("Ian Shehadeh")
                         .version("0.1.0")
@@ -140,7 +143,7 @@ fn main() {
         Ok(v) => v,
     };
 
-    cache.sync(&client).unwrap();
+    cache.sync(&client).await.unwrap();
     write_cache("todoist.rs", &cache).unwrap();
 
     if let Some(matches) = matches.subcommand_matches("add") {
@@ -164,6 +167,6 @@ fn main() {
                     .project_id(parent.id)
                     .priority(matches.value_of("priority").unwrap().parse().unwrap()));
         }
-        tx.commit().unwrap();
+        tx.commit().await.unwrap();
     }
 }

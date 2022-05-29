@@ -1,3 +1,4 @@
+use serde::{Serialize, Deserialize};
 
 macro_rules! command_arguments {
     (Vec<ID>, $field:ident, $($typs:tt $(<$($generics:tt $(<$generics2:tt>)*),+>)*, $fields:ident),*) => {

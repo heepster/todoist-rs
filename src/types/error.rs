@@ -3,9 +3,8 @@ use serde_json;
 
 use std::fmt;
 use std::error;
-use CommandErrors;
 
-
+use crate::CommandErrors;
 
 #[derive(Debug)]
 pub enum Error {

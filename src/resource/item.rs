@@ -1,6 +1,5 @@
-use types::*;
-use command;
-use uuid::Uuid;
+use crate::types::*;
+use crate::command;
 
 #[derive(Serialize, Deserialize, Default, Debug, Clone)]
 #[serde(default)]
@@ -13,7 +12,7 @@ pub struct Item {
     /// The ID of the item's owner
     pub user_id : ID,
 
-    /// The ID of the project this item belongs to 
+    /// The ID of the project this item belongs to
     pub project_id : ID,
 
     /// This item's text, not (e.g. "Do the dishes")
@@ -26,7 +25,7 @@ pub struct Item {
     /// The date_string's language
     pub date_lang : Option<Language>,
 
-    /// The date this TODO is due, or none 
+    /// The date this TODO is due, or none
     pub due_date_utc : Option<Date>,
 
     /// this item's importance
@@ -68,7 +67,7 @@ pub struct Item {
     // 1 if this item has been marked as a favorite
     pub is_favorite : isize,
 
-    /// used internally by Todoist, here for completeness 
+    /// used internally by Todoist, here for completeness
     pub sync_id : Option<isize>,
 
     /// when this item was added

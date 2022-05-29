@@ -40,14 +40,16 @@ impl Cache {
         }
     }
 
-    pub fn sync(&mut self, client: &Client) -> Result<(), Error> {
+    pub async fn sync(&mut self, client: &Client) -> Result<(), Error> {
         let sync_tok = self.sync_token.clone().unwrap_or("*".to_string());
         let resp = client.sync(&sync_tok,
-                                  &[ResourceType::Projects,
-                                    ResourceType::Items,
-                                    ResourceType::User,
-                                    ResourceType::Collaborators,
-                                    ResourceType::Labels])?;
+        &[ResourceType::Projects,
+            ResourceType::Items,
+            ResourceType::User,
+            ResourceType::Collaborators,
+            ResourceType::Labels]
+        ).await
+        .unwrap();
 
         match resp.user {
             Some(v) => self.user = v,
@@ -73,7 +75,7 @@ impl Cache {
     }
 
     /// Get a project from the cache using a file path, the path is made up of project names separated with a `/`
-    /// 
+    ///
     /// The path can have up to four elements (the maximum indent for a project is 4).
     /// A leading slash is not necessary, but legal, however a windows drive identifier
     /// (for example `C:\\`) is not allowed.
@@ -82,7 +84,7 @@ impl Cache {
                                 .map(|(_, x)| x)
                                 .collect();
         sorted.sort_by(|a, b| a.item_order.cmp(&b.item_order));
-        
+
         let mut proj : Option<&Project> = None;
         for (i, proj_name) in path.into().iter().enumerate() {
             let order : isize = match proj {

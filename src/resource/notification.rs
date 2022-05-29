@@ -1,4 +1,4 @@
-use types::*;
+use crate::types::*;
 use super::User;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -59,7 +59,7 @@ pub struct Reminder {
     /// The item this reminder is attached to
     pub item_id : ID,
 
-    /// The service used to notify the user. 
+    /// The service used to notify the user.
     pub service : NotificationService,
 
     /// The reminder's type
@@ -68,7 +68,7 @@ pub struct Reminder {
 
     /// When this reminder should be triggered, in free form text
     pub date_string : Option<String>,
-    
+
     /// the language of `date_string`
     pub date_lang : Language,
 
@@ -86,7 +86,7 @@ pub struct Reminder {
 
     /// the location longitude
     pub loc_long : Option<isize>,
-    
+
     /// when the reminder should be triggered at the location
     pub loc_trigger : Option<NotificationTrigger>,
 
@@ -121,7 +121,7 @@ pub struct LiveNotification {
     // -----------------------------------
     // INVITATION PROPERTIES
     // -----------------------------------
-    
+
     /// the user who is being invited
     pub from_user : Option<User>,
 
@@ -157,10 +157,10 @@ pub struct LiveNotification {
 
     /// The number of users in the business
     pub quantity : Option<isize>,
-    
+
     /// the tariff plan name, business_monthly or business_yearly
     pub plan : Option<String>, // TODO make this an enum
-    
+
     /// when the business account will be disabled (unix time)
     pub active_until : Option<i64>,
 

@@ -1,12 +1,10 @@
 use serde;
-
-use std::fmt;
-use types::*;
-use command;
-use uuid::Uuid;
-
 use serde::{Serialize, Deserialize, Serializer, Deserializer};
 use serde::ser::SerializeSeq;
+use std::fmt;
+
+use crate::types::*;
+use crate::command;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum UploadState {

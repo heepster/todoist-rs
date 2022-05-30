@@ -13,7 +13,7 @@ pub struct Label {
     pub name : String,
 
     /// The label's Color
-    pub color : Color,
+    //pub color : Color,
 
     /// This label's position in the label list, the smallest number should be at the top
     pub item_order : isize,
@@ -36,7 +36,7 @@ impl Label {
             item_order: self.item_order,
             is_favorite: self.is_favorite,
             name: self.name.clone(),
-            color: self.color.clone(),
+            //color: self.color.clone(),
         }
     }
 

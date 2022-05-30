@@ -39,7 +39,7 @@ impl Filter {
             is_favorite: self.is_favorite,
             name: self.name.clone(),
             query: self.query.clone(),
-            color: self.color.clone(),
+            //color: self.color.clone(),
         }
     }
 

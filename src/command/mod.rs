@@ -10,7 +10,7 @@ pub mod filter {
         pub struct Add {
             name  : String,
             query : String,
-            color : Color,
+            //color : Color,
             item_order  : isize,
             is_favorite : isize
         }
@@ -21,7 +21,7 @@ pub mod filter {
             id          : ID,
             name        : String,
             query       : String,
-            color       : Color,
+            //color       : Color,
             item_order  : isize,
             is_favorite : isize
         }
@@ -92,7 +92,7 @@ pub mod label {
     command! {
         pub struct Add {
             name : String,
-            color : Color,
+            //color : Color,
             item_order : isize,
             is_favorite : isize
         }
@@ -102,7 +102,7 @@ pub mod label {
         pub struct Update {
             id   : ID,
             name : String,
-            color : Color,
+            //color : Color,
             item_order : isize,
             is_favorite : isize
         }
@@ -143,7 +143,7 @@ pub mod project {
     command! {
         pub struct Add {
             name        : String,
-            color       : Color,
+            //color       : Color,
             indent      : u8,
             item_order  : isize,
             is_favorite : isize
@@ -154,7 +154,7 @@ pub mod project {
         pub struct Update {
             id          : ID,
             name        : String,
-            color       : Color,
+            //color       : Color,
             indent      : u8,
             item_order  : isize,
             collapsed   : isize,

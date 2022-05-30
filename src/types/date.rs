@@ -7,7 +7,8 @@ use std::default::Default;
 
 /// FORMAT = [Day Abbreviation] [Day Number (Padded)] [Month Abbreviation] [Year (Padded)] [Time (H:M:S)] [Zone Offset (+xxxx)]
 //const FORMAT : &'static str = "%a %d %b %Y %X %z";
-const FORMAT : &'static str = "%Y-%b-%dT%X%z";
+//const FORMAT : &'static str = "%Y-%b-%dT%X%z";
+const FORMAT : &'static str = "%+";
 
 #[derive(Debug, Clone)]
 pub struct Date {

@@ -44,6 +44,9 @@ pub fn write_cache<S: serde::Serialize>(prefix: &str, c : &S) -> Result<(), serd
 pub fn read_cache<D>(prefix: &str) -> serde_json::Result<D>
     where D: serde::de::DeserializeOwned + Default + serde::Serialize
  {
+    let path2 = xdg::BaseDirectories::with_prefix(prefix).unwrap();
+    println!("{:?}", path2);
+
     let path = xdg::BaseDirectories::with_prefix(prefix).unwrap().place_cache_file("cache.json").unwrap();
     let file = match fs::File::open(&path) {
         Ok(v) => v,
@@ -158,7 +161,13 @@ async fn main() {
                     .indent(parent.indent + 1)
                     .item_order(parent.item_order)
                     .is_favorite(matches.is_present("favorite") as isize)
-                    .color(matches.value_of("color").unwrap().parse().unwrap()));
+                    //.color(
+                    //    matches.value_of("color")
+                    //        .unwrap()
+                    //        .parse()
+                    //        .unwrap()
+                    //)
+                );
         } else if let Some(matches) = matches.subcommand_matches("item") {
             let parent = cache.get_project(matches.value_of("project").unwrap()).unwrap();
 

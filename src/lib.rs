@@ -166,12 +166,12 @@ impl<'a> Client {
             .send()
             .await?;
 
-        println!("{:?}", res.text().await?);
+        //println!("{:?}", res.text().await?);
 
-        //let json_res = res
-        //    .json::<SyncResponse>()
-        //    .await
-        //    .expect("Test");
+        let json_res = res
+            .json::<SyncResponse>()
+            .await
+            .expect("Could not deserialize Sync response");
 
         //if json_res.is_err() {
         //    println!("{:?}", json_res.err().);
@@ -179,7 +179,7 @@ impl<'a> Client {
 
         //println!("{:?}", json_res);
         return Ok(
-            SyncResponse::default()
+            json_res
         );
     }
 

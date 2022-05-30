@@ -15,7 +15,7 @@ pub struct Project {
     pub name  : String,
 
     /// The project's Color
-    pub color : Color,
+    //pub color : Color,
 
     /// The project's indent (hierarchy level) is a number between from 1-4
     pub indent : u8,
@@ -55,7 +55,7 @@ impl Project {
             item_order: self.item_order,
             is_favorite: self.is_favorite,
             name: self.name.clone(),
-            color: self.color.clone(),
+            //color: self.color.clone(),
             indent: self.indent,
             collapsed: self.collapsed,
         }

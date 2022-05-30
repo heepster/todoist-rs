@@ -44,9 +44,6 @@ pub fn write_cache<S: serde::Serialize>(prefix: &str, c : &S) -> Result<(), serd
 pub fn read_cache<D>(prefix: &str) -> serde_json::Result<D>
     where D: serde::de::DeserializeOwned + Default + serde::Serialize
  {
-    let path2 = xdg::BaseDirectories::with_prefix(prefix).unwrap();
-    println!("{:?}", path2);
-
     let path = xdg::BaseDirectories::with_prefix(prefix).unwrap().place_cache_file("cache.json").unwrap();
     let file = match fs::File::open(&path) {
         Ok(v) => v,
@@ -169,12 +166,22 @@ async fn main() {
                     //)
                 );
         } else if let Some(matches) = matches.subcommand_matches("item") {
-            let parent = cache.get_project(matches.value_of("project").unwrap()).unwrap();
+            let maybe_project = cache.get_project_by_name(
+                matches.value_of("project").unwrap().to_string()
+            );
 
-            tx.exec(todoist::Item::add()
-                    .content(matches.value_of("content").unwrap().to_string())
-                    .project_id(parent.id)
-                    .priority(matches.value_of("priority").unwrap().parse().unwrap()));
+            match maybe_project {
+                Some(project) => {
+                    tx.exec(todoist::Item::add()
+                            .content(matches.value_of("content").unwrap().to_string())
+                            .project_id(project.id)
+                            .priority(matches.value_of("priority").unwrap().parse().unwrap()));
+                },
+                None => {
+                    panic!("Couldn't find project '{}'", matches.value_of("project").unwrap());
+                }
+            }
+
         }
         tx.commit().await.unwrap();
     }

@@ -83,6 +83,7 @@ impl Cache {
         let mut sorted : Vec<&Project> = self.projects.iter()
                                 .map(|(_, x)| x)
                                 .collect();
+
         sorted.sort_by(|a, b| a.item_order.cmp(&b.item_order));
 
         let mut proj : Option<&Project> = None;
@@ -109,5 +110,17 @@ impl Cache {
 
         proj
     }
+
+    pub fn get_project_by_name(&self, project_name: String) -> Option<Project> {
+        let maybe_key = self.projects
+            .iter()
+            .find_map(|(key, val)| if val.name == project_name { Some(key) } else { None });
+
+        match maybe_key {
+            Some(key) => Some(self.projects[key].clone()),
+            None => None,
+        }
+    }
+
 
 }

@@ -15,7 +15,7 @@ pub struct Filter {
     pub query : String,
 
     /// The filter's color
-    pub color : Color,
+    //pub color : Color,
 
     /// The filter's place in the filter list (lowest is first)
     pub order : isize,
